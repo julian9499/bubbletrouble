@@ -19,9 +19,21 @@ function bubble(size, color, coord){
     this.coord.y = this.coord.y + this.velocity.y;
 
     if(this.coord.y >= 750-size/2){
+      if(this.coord.y >= 755 -size/2){
+        this.coord.y = 740-size/2;
+      }
+
       this.velocity.y = -this.velocity.y;
     }
+
+
     if(this.coord.x >= 800-size/2 || this.coord.x  <= size/2 ){
+      if(this.coord.x >= 801-size/2){
+        this.coord.x = 799 - size/2;
+      }
+      if(this.coord.x <= size/2 - 10){
+        this.coord.x = size/2;
+      }
       this.velocity.x = -this.velocity.x;
     }
   }
