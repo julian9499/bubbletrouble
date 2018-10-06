@@ -1,10 +1,6 @@
-var slider, lenslider, angle, lendecrease;
-var img;
-var cell = [];
-var cellnext = [];
-var state;
-var dikte;
-var pause = false;
+var balls = [];
+var player;
+var ball;
 
 function preload() {
   //img = loadImage('../assets/julien.jpg');
@@ -13,22 +9,14 @@ function preload() {
 function setup() {
   createCanvas(800, 800);
   angle = 0;
-  stroke(0);
-  dikte = 10;
-
-
-  for(let x = 0; x < width/dikte; x++){
-    cell[x] = [];
-    for(let y = 0; y < width/dikte; y++){
-      cell[x][y] = false;
-    }
-  }
-
-  for(let x = 0; x < width/dikte; x++){
-    cellnext[x] = [];
-    for(let y = 0; y < width/dikte; y++){
-      cellnext[x][y] = false;
-    }
+  stroke(2);
+  var g = color('blue');
+  var r = color('white');
+  for(var i = 0; i < 100; i++){
+    var size = Math.random()*30 + 20;
+    var col = color(Math.random()*255, Math.random()*255, Math.random()*255);
+    balls[i] = new bubble(size, col, new p5.Vector(Math.random() * 750 + 200, Math.random()*500));
+    balls[i].velocity.x = Math.random() * 5 + 1;
   }
 
 }
@@ -37,145 +25,17 @@ function setup() {
 
 function draw() {
   background(51);
-  var g = color('blue');
-  var r = color('white');
 
-if(!pause){
-  for(let x = 0; x < width/dikte; x++){
-    for(let y = 0; y < width/dikte; y++){
-        cellnext[x][y] = gameoflife(checkneighbours(x,y), x, y)
-      }
-    }
+  fill('red');
+  rect(0, 750, 800, 50);
 
-    for(let x = 0; x < width/dikte; x++){
-      for(let y = 0; y < width/dikte; y++){
-          if(cellnext[x][y]){
-            cell[x][y] = true;
-          } else {
-            cell[x][y] = false;
-          }
-        }
-      }
-    }
-
-  for(let x = 0; x < width/dikte; x++){
-    for(let y = 0; y < width/dikte; y++){
-      if(cell[x][y]){
-        fill(g);
-        rect(x*dikte, y*dikte, dikte, dikte);
-      } else {
-        fill(r);
-        rect(x*dikte, y*dikte, dikte, dikte);
-      }
-    }
+  for(var i = 0; i < balls.length; i++){
+    balls[i].update();
+    balls[i].draw();
   }
 
-
-}
-
-function clean(){
-  for(let x = 0; x < width/dikte; x++){
-    cellnext[x] = [];
-    for(let y = 0; y < width/dikte; y++){
-      cellnext[x][y] = false;
-    }
-  }
-  for(let x = 0; x < width/dikte; x++){
-    cell[x] = [];
-    for(let y = 0; y < width/dikte; y++){
-      cell[x][y] = false;
-    }
-  }
-}
-
-function sw(){
-  if(pause) {
-    pause = false;
-  } else {
-    pause = true;
-  }
-}
-
-function checkneighbours(x, y){
-  let ans = 0;
-  if(x != width/dikte - 1 && cell[x+1][y]){
-    ans++;
-  }
-  if(y != width/dikte - 1 && cell[x][y+1]){
-    ans++;
-  }
-  if(y != width/dikte - 1 && x != width/dikte - 1 && cell[x+1][y+1]){
-    ans++;
-  }
-  if(x != 0 && cell[x-1][y]){
-    ans++;
-  }
-  if(y != 0 && cell[x][y-1]){
-    ans++;
-  }
-  if(y != 0 && x != 0 && cell[x-1][y-1]){
-    ans++;
-  }
-  if(y != 0 && x != width/dikte - 1 && cell[x+1][y-1]){
-    ans++;
-  }
-  if(x != 0 && y != width/dikte - 1 && cell[x-1][y+1]){
-    ans++;
-  }
-  return ans
-
-  ;
-}
-
-function gameoflife(alive, x, y){
-  if(cell[x][y]){
-    if( alive > 1 && alive < 4){
-      return true;
-    }else{
-      return false;
-    }
-  } else{
-    if(alive == 3){
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-function branch(len){
-  if(len > 4){
-    line(0,0,0,-len)
-    translate(0, -len)
-    push();
-    rotate(PI/4);
-    branch(len* 0.67);
-    pop();
-    push();
-    rotate(-PI/4);
-    branch(len* 0.67);
-    pop();
-  }
 }
 
 function keyPressed() {
-}
-
-function mousePressed(){
-  print((mouseX - mouseX % dikte)/dikte);
-  print((mouseY - mouseY % dikte)/dikte);
-  let x = (mouseX - mouseX % dikte)/dikte;
-  let y = (mouseY - mouseY % dikte)/dikte;
-  if(cell[x][y]){
-    cell[x][y] = false;
-  }else{
-  cell[x][y] = true;
-}
-  /*
-  cell[x][y-2] = true;
-  cell[x-1][y] = true;
-  cell[x+1][y] = true;
-  cell[x+1][y-1] = true;
-  */
 
 }
