@@ -1,10 +1,10 @@
 var airres = 0.01;
 
-function bubble(size, color, coord){
+function bubble(size, color, coord, velx){
   this.size = size;
   this.color = color;
   this.coord = coord;
-  this.velocity = new p5.Vector(0, 0);
+  this.velocity = new p5.Vector(velx, 0);
   this.acceleration = new p5.Vector(0, 9.81);
 
   this.draw = function (){
@@ -41,11 +41,19 @@ function bubble(size, color, coord){
     }
   }
 
-  this.split = function() {
-    var balls = []
-    balls[0] = new bubble(this.size/2, color, new p5.Vector(coord.x -10, coord.y +2));
-    balls[1] = new bubble(this.size/2, color, new p5.Vector(coord.x +10, coord.y +2));
+  this.split = function(balls, j) {
+    if(this.size > 20){
+    balls.push(new bubble(this.size/2, color, new p5.Vector(coord.x -10, coord.y +2), this.velocity.x));
+    balls.push(new bubble(this.size/2, color, new p5.Vector(coord.x +10, coord.y +2), -this.velocity.x));
+    }
+    balls.splice(j,1);
+  }
 
-    return balls;
+  this.getSize = function() {
+    return this.size;
+  }
+
+  this.getPos = function() {
+    return this.coord;
   }
 }

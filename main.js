@@ -14,17 +14,14 @@ function setup() {
   ellipseMode(CENTER); // Set ellipseMode to CENTER
   var g = color('blue');
   var r = color('white');
-  for(var i = 0; i < 10; i++){
+  for(var i = 0; i < 1; i++){
     var size = Math.random()*70 + 30;
     var col = color(Math.random()*255, Math.random()*255, Math.random()*255);
-    balls[i] = new bubble(size, col, new p5.Vector(Math.random() * 750 + 200, Math.random()*500));
-    balls[i].velocity.x = Math.random() * 5 + 1;
+    balls[i] = new bubble(size, col, new p5.Vector(Math.random() * 750 + 200, Math.random()*500), Math.random() * 5 + 1);
   }
   player = new player(color('green'), new p5.Vector(400, 0));
 
 }
-
-
 
 function draw() {
   background(51);
@@ -35,9 +32,24 @@ function draw() {
   }
 
   for(var i = 0; i < projectiles.length; i++){
+    if(projectiles[i].coord.y <= 0){
+      projectiles.splice(i, 1);
+      break;
+    }
     projectiles[i].update();
     projectiles[i].draw();
+
   }
+
+  for(var i = 0; i < balls.length; i++){
+    for(var j = 0; j < projectiles.length; j++){
+      if(projectiles[j].intersect(balls[i])){
+        balls[i].split(balls, i);
+        projectiles.splice(j,1);
+      }
+    }
+  }
+
 
   player.update();
   player.draw();
@@ -48,6 +60,6 @@ function draw() {
 
 function keyTyped() {
   if(key === ' '){
-    projectiles.push(new projectile(color('white'), new p5.Vector(player.getcoordx() + 30, 650)));
+    projectiles.push(new projectile(color('white'), new p5.Vector(player.getcoordx() + 72.5, 650)));
   }
 }

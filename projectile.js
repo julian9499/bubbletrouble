@@ -7,10 +7,19 @@ function projectile(color, coord){
       return false;
     }
     fill(this.color);
-    rect(coord.x,coord.y, 5, 800);
+    rect(coord.x,coord.y, 2, 800);
   }
 
   this.update = function() {
     this.coord.y = this.coord.y - 3;
+  }
+
+  this.intersect = function(ball) {
+    var distance1 = abs(this.coord.x - ball.getPos().x);
+    if(distance1 <= ball.getSize() && (this.coord.y + ball.getSize()) <= ball.getPos().y ){
+      return true;
+    } else  {
+      return false;
+    }
   }
 }
