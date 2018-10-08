@@ -1,4 +1,5 @@
 var balls = [];
+var projectiles = [];
 var player;
 var ball;
 
@@ -19,6 +20,7 @@ function setup() {
     balls[i] = new bubble(size, col, new p5.Vector(Math.random() * 750 + 200, Math.random()*500));
     balls[i].velocity.x = Math.random() * 5 + 1;
   }
+  player = new player(color('green'), new p5.Vector(400, 0));
 
 }
 
@@ -27,16 +29,25 @@ function setup() {
 function draw() {
   background(51);
 
-  fill('red');
-  rect(0, 750, 800, 50);
-
   for(var i = 0; i < balls.length; i++){
     balls[i].update();
     balls[i].draw();
   }
 
+  for(var i = 0; i < projectiles.length; i++){
+    projectiles[i].update();
+    projectiles[i].draw();
+  }
+
+  player.update();
+  player.draw();
+
+  fill('red');
+  rect(0, 750, 800, 50);
 }
 
-function keyPressed() {
-
+function keyTyped() {
+  if(key === ' '){
+    projectiles.push(new projectile(color('white'), new p5.Vector(player.getcoordx() + 30, 650)));
+  }
 }
