@@ -7,7 +7,7 @@ function projectile(color, coord){
       return false;
     }
     fill(this.color);
-    rect(coord.x,coord.y, 2, 800);
+    rect(coord.x,coord.y, 4, 800);
   }
 
   this.update = function() {
@@ -16,7 +16,7 @@ function projectile(color, coord){
 
   this.intersect = function(ball) {
     var distance1 = abs(this.coord.x - ball.getPos().x);
-    if(distance1 <= ball.getSize() && (this.coord.y + ball.getSize()) <= ball.getPos().y ){
+    if(distance1 < ball.getSize() && (this.coord.y - ball.getSize()) <= ball.getPos().y ){
       return true;
     } else  {
       return false;

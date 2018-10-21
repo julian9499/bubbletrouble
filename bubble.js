@@ -1,11 +1,15 @@
 var airres = 0.01;
 
-function bubble(size, color, coord, velx){
+function bubble(size, color, coord, velx, vely){
   this.size = size;
   this.color = color;
   this.coord = coord;
-  this.velocity = new p5.Vector(velx, 0);
+  this.velocity = new p5.Vector(velx, vely);
   this.acceleration = new p5.Vector(0, 9.81);
+
+
+  // Let EPS (epsilon) be a small value
+  var EPS = 0.0000001;
 
   this.draw = function (){
     fill(this.color);
@@ -42,9 +46,9 @@ function bubble(size, color, coord, velx){
   }
 
   this.split = function(balls, j) {
-    if(this.size > 20){
-    balls.push(new bubble(this.size/2, color, new p5.Vector(coord.x -10, coord.y +2), this.velocity.x));
-    balls.push(new bubble(this.size/2, color, new p5.Vector(coord.x +10, coord.y +2), -this.velocity.x));
+    if(this.size > 40){
+    balls.push(new bubble(this.size/2, color, new p5.Vector(coord.x -10, coord.y +2), this.velocity.x, this.velocity.y));
+    balls.push(new bubble(this.size/2, color, new p5.Vector(coord.x +10, coord.y +2), -this.velocity.x, this.velocity.y));
     }
     balls.splice(j,1);
   }
@@ -55,5 +59,18 @@ function bubble(size, color, coord, velx){
 
   this.getPos = function() {
     return this.coord;
+  }
+
+  // Given two circles this method finds the intersection
+  // point(s) of the two bubbles (if any exists)
+  this.intersect = function(c2, framedelta) {
+    var xcheck = abs(c2.getPos().x - this.coord.x) <= (c2.getSize() + this.size)/2;
+    var ycheck = abs(c2.getPos().y - this.coord.y) <= (c2.getSize() + this.size)/2;
+    if(xcheck && ycheck){
+      c2.velocity.x = -c2.velocity.x;
+      this.velocity.x = -this.velocity.x;
+      this.coord.x = this.coord.x + this.velocity.x * framedelta;
+      c2.coord.x = c2.coord.x + c2.velocity.x * framedelta;
+    }
   }
 }

@@ -2,28 +2,38 @@ var balls = [];
 var projectiles = [];
 var player;
 var ball;
+var timeNow;
+var timeLast;
+var tickTime;
+var d;
 
 function preload() {
   //img = loadImage('../assets/julien.jpg');
 }
 
 function setup() {
+  d = new Date();
+  timeLast = d.getMilliseconds();
+  tickTime = 0;
   createCanvas(800, 800);
   angle = 0;
   stroke(2);
   ellipseMode(CENTER); // Set ellipseMode to CENTER
   var g = color('blue');
   var r = color('white');
-  for(var i = 0; i < 1; i++){
+  for(var i = 0; i < 5; i++){
     var size = Math.random()*70 + 30;
     var col = color(Math.random()*255, Math.random()*255, Math.random()*255);
-    balls[i] = new bubble(size, col, new p5.Vector(Math.random() * 750 + 200, Math.random()*500), Math.random() * 5 + 1);
+    balls[i] = new bubble(size, col, new p5.Vector(Math.random() * 750 + 200, Math.random()*500), Math.random() * 5 + 1, 0);
   }
   player = new player(color('green'), new p5.Vector(400, 0));
 
 }
 
 function draw() {
+  timeNow = d.getMilliseconds();
+  var framedelta = ( timeNow - timeLast )
+  timeLast = timeNow;
   background(51);
 
   for(var i = 0; i < balls.length; i++){
@@ -40,6 +50,13 @@ function draw() {
     projectiles[i].draw();
 
   }
+
+    for(var i = 0; i < balls.length; i++){
+      for(var j = i; j < balls.length; j ++){
+        balls[i].intersect(balls[j], framedelta);
+      }
+    }
+
 
   for(var i = 0; i < balls.length; i++){
     for(var j = 0; j < projectiles.length; j++){
